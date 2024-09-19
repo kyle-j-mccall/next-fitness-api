@@ -11,7 +11,15 @@ generator db {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  email String 
-  
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  userDetails UserDetails? // One-to-one optional relationship to UserDetails
+}
+
+model UserDetails {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  age    Int
+  weight Int
+  user   User @relation(fields: [userId], references: [id])
 }
