@@ -28,3 +28,13 @@ def read_root():
 async def get_all_users():
     users = await prisma.user.find_many()
     return users
+
+@app.get("/users/{user_id}", response_model=UserResponse)
+async def get_user_by_id(user_id: int):
+    user = await prisma.user.find_unique(where={"id": user_id})
+    return user
+
+@app.post("/users/", response_model=UserResponse)
+async def create_user(user: UserResponse):
+    created_user = await prisma.user.create(data=user.model_dump())
+    return created_user
