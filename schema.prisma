@@ -1,7 +1,6 @@
 datasource db {
-  // could be postgresql or mysql
-  provider = "sqlite"
-  url      = "file:dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator db {
@@ -17,9 +16,25 @@ model User {
 }
 
 model UserDetails {
-  id     Int  @id @default(autoincrement())
-  userId Int  @unique
-  age    Int
-  weight Int
-  user   User @relation(fields: [userId], references: [id])
+  id                  Int                @id @default(autoincrement())
+  userId              Int                @unique
+  age                 Int
+  weight              Int
+  user                User               @relation(fields: [userId], references: [id])
+  gender              String
+  preferredModalities TrainingModality[] @relation("UserTrainingModalities")
+  fitnessLevel        FitnessLevel
+  trainingModalityId  Int?
+}
+
+enum FitnessLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+model TrainingModality {
+  id    Int           @id @default(autoincrement())
+  name  String
+  users UserDetails[] @relation("UserTrainingModalities")
 }
