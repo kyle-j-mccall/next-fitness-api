@@ -17,6 +17,10 @@ async def shutdown():
 class UserResponse(BaseModel):
     id: int
     email: str
+    
+class UserCreate(BaseModel):
+    email: str
+    password: str
 
 
 @app.get("/")
@@ -35,6 +39,6 @@ async def get_user_by_id(user_id: int):
     return user
 
 @app.post("/users/", response_model=UserResponse)
-async def create_user(user: UserResponse):
+async def create_user(user: UserCreate):
     created_user = await prisma.user.create(data=user.model_dump())
     return created_user
